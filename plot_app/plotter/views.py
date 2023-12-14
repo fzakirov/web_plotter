@@ -31,30 +31,36 @@ def plot(request):
 
 
 def plot_result(request):
-    selected_columns = request.POST.getlist('columns')
-    file_path = request.POST['file']
-    df = pd.read_csv(file_path)
-    df_selected = df[selected_columns]
-    fig = px.box(df_selected,
-             title = str(selected_columns),
-             height = 800,
-             width = 1000,)
+    if request.method == 'POST':
+        selected_columns = request.POST.getlist('selected_columns')
+        file_path = request.POST['file']
+        df = pd.read_csv(file_path)
+        df_selected = df[selected_columns]
+        fig = px.box(df_selected,
+                 title = str(selected_columns),
+                 height = 800,
+                 width = 1000,)
 
-    fig.update_layout(
-        font=dict(
-            size=20,  # Set the font size
+        fig.update_layout(
+            font=dict(
+                size=20,  # Set the font size
+            )
         )
-    )
-    graph = fig.to_html(full_html=False)
-    response = render(request, 'plot_result.html', {'graph': graph})
+        graph = fig.to_html(full_html=False)
+        response = render(request, 'plot_result.html', {'graph': graph})
+    else:
+        response = render(request, 'index.html', {'error': 'Invalid request or action'})
     os.remove(file_path)
     return(response)
 
 def display_data(request):
-    selected_columns = request.POST.getlist('columns')
-    file_path = request.POST['file']
-    df = pd.read_csv(file_path)
-    df_selected = df[selected_columns]
-    response = render(request, 'display_data.html', {'data': df_selected})
+    if request.method == 'POST':
+        selected_columns = request.POST.getlist('selected_columns')
+        file_path = request.POST['file']
+        df = pd.read_csv(file_path)
+        df_selected = df[selected_columns]
+        response = render(request, 'display_data.html', {'data': df_selected})
+    else:
+        response = render(request, 'index.html', {'error': 'Invalid request or action'})
     os.remove(file_path)
     return(response)

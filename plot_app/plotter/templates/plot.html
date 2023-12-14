@@ -5,23 +5,26 @@
 </head>
 <body>
     <h1>Select Columns</h1>
-    <form action="{% url 'plot_result' %}" method="post">
+    <form id="columnsForm" method="post">
         {% csrf_token %}
         <input type="hidden" name="file" value="{{ file }}">
-        {% for column in columns %}
-            <input type="checkbox" name="columns" value="{{ column }}">{{ column }}<br>
-        {% endfor %}
+        <div id="columnsList">
+            {% for column in columns %}
+                <input type="checkbox" name="selected_columns" value="{{ column }}">{{ column }}<br>
+            {% endfor %}
+        </div>
         <br>
-        <input type="submit" value="Plot">
+        <input type="button" value="Plot" onclick="submitForm('plot')">
+        <input type="button" value="Display Data" onclick="submitForm('display')">
     </form>
-    <form action="{% url 'display_data' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="file" value="{{ file }}">
-        {% for column in columns %}
-            <input type="checkbox" name="columns" value="{{ column }}">{{ column }}<br>
-        {% endfor %}
-        <br>
-        <input type="submit" value="Display Data">
-    </form>
+
+    <script>
+        function submitForm(action) {
+            var form = document.getElementById('columnsForm');
+            var formAction = (action === 'plot') ? '{% url 'plot_result' %}' : '{% url 'display_data' %}';
+            form.action = formAction;
+            form.submit();
+        }
+    </script>
 </body>
 </html>
