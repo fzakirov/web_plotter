@@ -1,12 +1,19 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render
 import pandas as pd
 import plotly.express as px
 
+
 def index(request):
     return render(request, 'index.html')
+
+from django.core.files.storage import FileSystemStorage
+import tempfile
+from django.core.files.uploadhandler import TemporaryFileUploadHandler
+
+import io
+import os
 
 from django.core.files.storage import FileSystemStorage
 
@@ -21,6 +28,7 @@ def plot(request):
         return render(request, 'plot.html', {'columns': columns, 'file': file_path})
     else:
         return render(request, 'index.html', {'error': 'No file uploaded'})
+
 
 def plot_result(request):
     selected_columns = request.POST.getlist('columns')
@@ -38,11 +46,15 @@ def plot_result(request):
         )
     )
     graph = fig.to_html(full_html=False)
-    return render(request, 'plot_result.html', {'graph': graph})
+    response = render(request, 'plot_result.html', {'graph': graph})
+    os.remove(file_path)
+    return(response)
 
 def display_data(request):
     selected_columns = request.POST.getlist('columns')
     file_path = request.POST['file']
     df = pd.read_csv(file_path)
     df_selected = df[selected_columns]
-    return render(request, 'display_data.html', {'data': df_selected})
+    response = render(request, 'display_data.html', {'data': df_selected})
+    os.remove(file_path)
+    return(response)
