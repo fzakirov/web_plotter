@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Data</title>
+</head>
+<body>
+    <h1>Displayed Data</h1>
+    {{ data.to_html|safe }}
+    <br>
+    <a href="{% url 'index' %}">Back to Upload</a>
+</body>
+</html>
