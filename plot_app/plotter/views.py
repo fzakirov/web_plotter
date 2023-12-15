@@ -58,7 +58,7 @@ def display_data(request):
         selected_columns = request.POST.getlist('selected_columns')
         file_path = request.POST['file']
         df = pd.read_csv(file_path)
-        df_selected = df[selected_columns]
+        df_selected = df[["sub"] + selected_columns]
         response = render(request, 'display_data.html', {'data': df_selected})
     else:
         response = render(request, 'index.html', {'error': 'Invalid request or action'})
