@@ -5,57 +5,81 @@
     <title>Select Columns</title>
     <style>
     body {
-       font-family: Arial, sans-serif;
-       margin: 0;
-       padding: 0;
-       background-color: #f4f4f4;
-       color: #333;
-   }
-   .container {
-       max-width: 600px;
-       margin: 20px auto;
-       padding: 20px;
-       background-color: #fff;
-       border-radius: 5px;
-       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-   }
-   h1 {
-       text-align: center;
-   }
-   form {
-       text-align: center;
-   }
-   input[type="button"] {
-       padding: 10px 20px;
-       margin-right: 10px;
-       background-color: #007bff;
-       color: #fff;
-       border: none;
-       border-radius: 3px;
-       cursor: pointer;
-       transition: background-color 0.3s;
-   }
-   input[type="button"]:hover {
-       background-color: #0056b3;
-   }
-   #columnsList {
-       margin-bottom: 15px;
-   }
-   input[type="checkbox"] {
-       margin-right: 5px;
-   }
+           font-family: Arial, sans-serif;
+           margin: 30px;
+           padding: 30px;
+           background-color: #f4f4f4;
+           color: #333;
+       }
+       .container {
+           max-width: 600px;
+           margin: 10px auto;
+           padding: 20px;
+           background-color: #fff;
+           border-radius: 5px;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .column {
+        flex: 1;
+        padding: 0 20px; /* Adjust the padding to change the distance between columns */
+       }
+       .column:first-child {
+        margin-right: 0px; /* Margin on the right side of the first column */
+       }
+
+        .column:last-child {
+         margin-left: 0px; /* Margin on the left side of the second column */
+       }
+       h1 {
+           text-align: center;
+       }
+       form {
+           text-align: left;
+       }
+       input[type="button"] {
+           padding: 10px 20px;
+           margin-right: 10px;
+           background-color: #007bff;
+           color: #fff;
+           border: none;
+           border-radius: 3px;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+       input[type="button"]:hover {
+           background-color: #0056b3;
+       }
+       #columnsList {
+           margin-bottom: 15px;
+       }
+       input[type="checkbox"] {
+           margin-right: 5px;
+       }
     </style>
 </head>
 <body>
+    <h1>Select Columns</h1>
     <div class="container">
-        <h1>Select Columns</h1>
         <form id="columnsForm" method="post">
             {% csrf_token %}
             <input type="hidden" name="file" value="{{ file }}">
-            <div id="columnsList">
-                {% for column in columns %}
-                    <input type="checkbox" name="selected_columns" value="{{ column }}">{{ column }}<br>
-                {% endfor %}
+            <div style="display: flex;">
+                <!-- First column -->
+                <div class="column">
+                    <h2>Columns</h2>
+                    <div id="columnsList">
+                        {% for column in columns %}
+                            <input type="checkbox" name="selected_columns" value="{{ column }}">{{ column }}<br>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Second column for additional selection -->
+                <div class="column">
+                    <h2>Subset</h2>
+                    {% for subset in subsets %}
+                        <input type="checkbox" name="selected_subsets" value="{{ subset }}">{{ subset }}<br>
+                    {% endfor %}
+                </div>
             </div>
             <input type="button" value="Plot" onclick="submitForm('plot')">
             <input type="button" value="Display Data" onclick="submitForm('display')">
